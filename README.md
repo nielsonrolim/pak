@@ -41,6 +41,68 @@ ln -s (pwd)/completions/pak.fish  ~/.config/fish/completions/pak.fish
 
 Either way, open a new fish shell (or `source ~/.config/fish/functions/pak.fish`) and `pak` is ready.
 
+## Usage
+
+Run `pak` with no arguments to print a help summary.
+
+### Upgrade everything
+
+```fish
+pak upgrade
+```
+
+Runs `paru -Syu` (refresh + upgrade repo and AUR packages) and then `flatpak upgrade`. Skip the second half by upgrading directly with `paru -Syu` if you don't use flatpak.
+
+### Search the repos and AUR
+
+```fish
+pak search firefox
+```
+
+### Install one or more packages
+
+```fish
+pak install neovim ripgrep fd
+```
+
+Tab completion suggests package names from the official repos.
+
+### Show package info
+
+```fish
+pak info neovim
+```
+
+### Remove packages (with their unused deps and config)
+
+```fish
+pak remove neovim
+```
+
+Uses `paru -Rns`, so unused dependencies and saved configs are removed alongside the package. Tab completion here is restricted to *installed* packages.
+
+### List installed AUR / foreign packages
+
+```fish
+pak aur
+```
+
+Equivalent to `pacman -Qm` — handy for auditing what came from outside the official repos.
+
+### Clean the package cache
+
+```fish
+pak clean
+```
+
+### Remove orphaned packages
+
+```fish
+pak autoremove
+```
+
+Finds unrequired dependencies via `pacman -Qdtq` and removes them with `paru -Rns`. Prints a friendly message and exits cleanly when there's nothing to remove.
+
 ## Subcommand aliases
 
 Most subcommands have shorter aliases:
