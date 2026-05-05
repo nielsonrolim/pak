@@ -1,0 +1,8 @@
+# editor swap files
+*.sw?
+
+# OS junk
+.DS_Store
+
+# install.fish backups (in case the script is run from inside the repo)
+*.bak

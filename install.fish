@@ -14,10 +14,21 @@ for f in $src_fn $src_cmp
 end
 
 mkdir -p (dirname $dst_fn) (dirname $dst_cmp)
-cp $src_fn  $dst_fn
-cp $src_cmp $dst_cmp
 
-echo "installed:"
-echo "  $dst_fn"
-echo "  $dst_cmp"
+function __pak_install_one --argument-names src dst
+    if test -f $dst; and cmp -s $src $dst
+        echo "  unchanged: $dst"
+        return 0
+    end
+    if test -f $dst
+        cp $dst "$dst.bak"
+        echo "  backed up: $dst -> $dst.bak"
+    end
+    cp $src $dst
+    echo "  installed: $dst"
+end
+
+echo "installing pak:"
+__pak_install_one $src_fn  $dst_fn
+__pak_install_one $src_cmp $dst_cmp
 echo "open a new fish shell (or run: source $dst_fn) to use pak."

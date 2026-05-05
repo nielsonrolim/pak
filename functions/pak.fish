@@ -1,12 +1,16 @@
 function pak --description "paru command wrapper"
     if test (count $argv) -eq 0
         echo "Usage:"
-        echo "  pak upgrade            # paru -Syu && flatpak upgrade"
+        echo "  pak upgrade             # paru -Syu (and flatpak upgrade if available)"
+        echo "  pak update              # paru -Sy (refresh package DB only)"
         echo "  pak search <pkg>        # paru -Ss <pkg>"
         echo "  pak install <pkg>...    # paru -S <pkg>"
         echo "  pak remove <pkg>...     # paru -Rns <pkg>"
         echo "  pak info <pkg>          # paru -Si <pkg>"
-        echo "  pak aur                # list AUR/foreign packages (pacman -Qm)"
+        echo "  pak owns <file>         # pacman -Qo <file>"
+        echo "  pak files <pkg>         # pacman -Ql <pkg>"
+        echo "  pak list                # explicitly installed packages (pacman -Qe)"
+        echo "  pak aur                 # AUR/foreign packages (pacman -Qm)"
         echo "  pak clean               # paru -Sc"
         echo "  pak autoremove          # remove orphaned packages"
         return 1
@@ -17,7 +21,12 @@ function pak --description "paru command wrapper"
 
     switch $subcmd
         case upgrade up
-            paru -Syu && flatpak upgrade
+            paru -Syu
+            and command -q flatpak
+            and flatpak upgrade
+
+        case update refresh
+            paru -Sy
 
         case search s
             test (count $args) -gt 0; or begin
@@ -47,8 +56,24 @@ function pak --description "paru command wrapper"
             end
             paru -Si $args
 
+        case owns
+            test (count $args) -gt 0; or begin
+                echo "pak owns <file>..."
+                return 1
+            end
+            pacman -Qo $args
+
+        case files
+            test (count $args) -gt 0; or begin
+                echo "pak files <package>..."
+                return 1
+            end
+            pacman -Ql $args
+
+        case list explicit
+            pacman -Qe
+
         case aur aur-list
-            # Foreign packages (not in official repos) — usually AUR
             pacman -Qm
 
         case clean

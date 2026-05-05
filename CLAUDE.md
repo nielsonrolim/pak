@@ -8,7 +8,8 @@ A fish-shell wrapper around `paru` (Arch Linux AUR helper) that exposes a smalle
 
 - `functions/pak.fish` — the `pak` function: a `switch` statement dispatching subcommands to `paru`, `pacman`, or `flatpak`.
 - `completions/pak.fish` — fish completions: subcommand list plus per-subcommand argument completers backed by `pacman -Ssq` (repo packages) or `pacman -Qq` (installed packages).
-- `install.fish` — copies the two files above into `~/.config/fish/{functions,completions}/`. The README documents this as the primary install path; symlinking is an alternative for users who want to `git pull` updates.
+- `install.fish` — copies the two files above into `~/.config/fish/{functions,completions}/`. Idempotent: `cmp -s` skips unchanged files, and existing files that differ from the repo version are backed up to `*.bak` before overwrite. The README documents this as the primary install path; symlinking is an alternative for users who want to `git pull` updates.
+- `uninstall.fish` — removes both files from `~/.config/fish/`. Handles symlinks and regular files; reports when nothing was there to remove.
 
 ## Install / try changes locally
 
@@ -26,5 +27,5 @@ When adding/renaming a subcommand or alias, update both. The completion guard's 
 ## Runtime assumptions
 
 - `paru` and `pacman` are on PATH (Arch / Arch-derived systems).
-- `pak upgrade` also runs `flatpak upgrade`; on systems without flatpak it will error on the second half of the `&&` chain.
+- `pak upgrade` runs `paru -Syu` and then `flatpak upgrade` only if `command -q flatpak` succeeds — systems without flatpak fall through silently.
 - `pak autoremove` defines orphans as `pacman -Qdtq` (unrequired deps) and pipes them to `paru -Rns`.

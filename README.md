@@ -3,24 +3,28 @@
 A small [fish shell](https://fishshell.com/) wrapper around [`paru`](https://github.com/Morganamilo/paru) that exposes a simpler, easier-to-remember subcommand surface for everyday Arch Linux package management.
 
 ```fish
-pak upgrade            # paru -Syu && flatpak upgrade
-pak search <pkg>       # paru -Ss <pkg>
-pak install <pkg>...   # paru -S <pkg>
-pak remove <pkg>...    # paru -Rns <pkg>
-pak info <pkg>         # paru -Si <pkg>
-pak aur                # list AUR/foreign packages (pacman -Qm)
-pak clean              # paru -Sc
-pak autoremove         # remove orphaned packages (pacman -Qdtq | paru -Rns)
+pak upgrade             # paru -Syu (and flatpak upgrade if available)
+pak update              # paru -Sy (refresh package DB only)
+pak search <pkg>        # paru -Ss <pkg>
+pak install <pkg>...    # paru -S <pkg>
+pak remove <pkg>...     # paru -Rns <pkg>
+pak info <pkg>          # paru -Si <pkg>
+pak owns <file>         # pacman -Qo <file>
+pak files <pkg>         # pacman -Ql <pkg>
+pak list                # explicitly installed packages (pacman -Qe)
+pak aur                 # AUR/foreign packages (pacman -Qm)
+pak clean               # paru -Sc
+pak autoremove          # remove orphaned packages (pacman -Qdtq | paru -Rns)
 ```
 
-Tab completion is wired up for every subcommand, with package name suggestions sourced from `pacman` (repo packages for `install` / `search` / `info`, installed packages for `remove`).
+Tab completion is wired up for every subcommand: repo packages for `install` / `search`, repo + installed for `info`, installed packages for `remove` / `files`, and filesystem paths for `owns`.
 
 ## Requirements
 
 - [fish](https://fishshell.com/) shell
 - [`paru`](https://github.com/Morganamilo/paru) (AUR helper)
 - `pacman` (Arch / Arch-derived distro)
-- `flatpak` — only required if you use `pak upgrade`
+- `flatpak` — optional; `pak upgrade` runs `flatpak upgrade` only if `flatpak` is on your PATH
 
 ## Install
 
@@ -30,7 +34,9 @@ cd pak
 ./install.fish
 ```
 
-This copies `functions/pak.fish` and `completions/pak.fish` into `~/.config/fish/`, creating the directories if needed.
+This copies `functions/pak.fish` and `completions/pak.fish` into `~/.config/fish/`, creating the directories if needed. The script is idempotent: re-running it skips files that haven't changed and backs up local edits to `*.bak` before overwriting.
+
+Remove with `./uninstall.fish`.
 
 If you'd rather track the repo and pick up changes with a `git pull`, symlink instead:
 
@@ -51,7 +57,15 @@ Run `pak` with no arguments to print a help summary.
 pak upgrade
 ```
 
-Runs `paru -Syu` (refresh + upgrade repo and AUR packages) and then `flatpak upgrade`. Skip the second half by upgrading directly with `paru -Syu` if you don't use flatpak.
+Runs `paru -Syu` and, if `flatpak` is on your PATH, follows up with `flatpak upgrade`. On systems without flatpak the second step is silently skipped.
+
+### Refresh the package database
+
+```fish
+pak update
+```
+
+Runs `paru -Sy` — useful before searching to make sure suggestions reflect the latest repo state. Doesn't upgrade anything.
 
 ### Search the repos and AUR
 
@@ -73,6 +87,8 @@ Tab completion suggests package names from the official repos.
 pak info neovim
 ```
 
+Tab completion offers both repo and installed packages, so AUR packages you've already installed show up.
+
 ### Remove packages (with their unused deps and config)
 
 ```fish
@@ -80,6 +96,30 @@ pak remove neovim
 ```
 
 Uses `paru -Rns`, so unused dependencies and saved configs are removed alongside the package. Tab completion here is restricted to *installed* packages.
+
+### Find which package owns a file
+
+```fish
+pak owns /usr/bin/fish
+```
+
+Equivalent to `pacman -Qo`. Tab-completes filesystem paths.
+
+### List the files installed by a package
+
+```fish
+pak files fish
+```
+
+Equivalent to `pacman -Ql`. Tab completion is restricted to installed packages.
+
+### List explicitly installed packages
+
+```fish
+pak list
+```
+
+Equivalent to `pacman -Qe` — packages you asked for, as opposed to dependencies pulled in transitively. Useful for auditing your install or capturing it for replication.
 
 ### List installed AUR / foreign packages
 
@@ -110,9 +150,11 @@ Most subcommands have shorter aliases:
 | Subcommand   | Aliases              |
 | ------------ | -------------------- |
 | `upgrade`    | `up`                 |
+| `update`     | `refresh`            |
 | `search`     | `s`                  |
 | `install`    | `add`, `i`           |
 | `remove`     | `rm`, `uninstall`    |
+| `list`       | `explicit`           |
 | `aur`        | `aur-list`           |
 | `autoremove` | `orphans`            |
 
