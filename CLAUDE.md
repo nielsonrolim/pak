@@ -4,14 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A fish-shell wrapper around `paru` (Arch Linux AUR helper) that exposes a smaller, friendlier subcommand surface (`pak upgrade`, `pak install`, `pak remove`, etc.). Two files, no build step, no tests.
+A fish-shell wrapper around `paru` (Arch Linux AUR helper) that exposes a smaller, friendlier subcommand surface (`pak upgrade`, `pak install`, `pak remove`, etc.). No build step, no tests.
 
 - `functions/pak.fish` — the `pak` function: a `switch` statement dispatching subcommands to `paru`, `pacman`, or `flatpak`.
 - `completions/pak.fish` — fish completions: subcommand list plus per-subcommand argument completers backed by `pacman -Ssq` (repo packages) or `pacman -Qq` (installed packages).
+- `install.fish` — copies the two files above into `~/.config/fish/{functions,completions}/`. The README documents this as the primary install path; symlinking is an alternative for users who want to `git pull` updates.
 
 ## Install / try changes locally
 
-Fish auto-loads from `~/.config/fish/functions/` and `~/.config/fish/completions/`. To test edits, either symlink this repo's dirs into those locations, or copy the changed file and run `source ~/.config/fish/functions/pak.fish` in an open shell.
+Fish auto-loads from `~/.config/fish/functions/` and `~/.config/fish/completions/`. For active development, symlink this repo's files into those locations so edits take effect immediately. For a one-shot install (or to verify the install script itself works), run `./install.fish`. To pick up changes in an already-open shell, `source ~/.config/fish/functions/pak.fish`.
 
 ## Editing rule: keep both files in sync
 
