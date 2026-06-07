@@ -4,6 +4,8 @@ A small [fish shell](https://fishshell.com/) wrapper around [`paru`](https://git
 
 ```fish
 pak upgrade             # paru -Syu (and flatpak upgrade if available)
+pak maintain [args]     # full Cachy-Update maintenance run (cachy-update)
+pak check               # list pending updates without applying them
 pak update              # paru -Sy (refresh package DB only)
 pak search <pkg>        # paru -Ss <pkg>
 pak install <pkg>...    # paru -S <pkg>
@@ -58,6 +60,22 @@ pak upgrade
 ```
 
 Runs `paru -Syu` and, if `flatpak` is on your PATH, follows up with `flatpak upgrade`. On systems without flatpak the second step is silently skipped.
+
+### Run a full maintenance pass
+
+```fish
+pak maintain
+```
+
+Delegates to [`cachy-update`](https://github.com/CachyOS/cachy-update) (falling back to `arch-update`) for a complete maintenance flow: repo + AUR updates plus news, orphan removal, cache cleanup, pacnew handling, and kernel/reboot and service-restart checks. Any extra arguments are passed straight through, e.g. `pak maintain --devel` or `pak maintain --news 10`. If neither tool is installed, it prints how to install `cachy-update` and exits.
+
+### Check for pending updates
+
+```fish
+pak check
+```
+
+Lists available updates without applying them. Uses `cachy-update --list` (or `arch-update --list`) when available, otherwise falls back to `paru -Qu`.
 
 ### Refresh the package database
 
@@ -150,6 +168,8 @@ Most subcommands have shorter aliases:
 | Subcommand   | Aliases              |
 | ------------ | -------------------- |
 | `upgrade`    | `up`                 |
+| `maintain`   | `cu`, `full`         |
+| `check`      | `co`                 |
 | `update`     | `refresh`            |
 | `search`     | `s`                  |
 | `install`    | `add`, `i`           |
