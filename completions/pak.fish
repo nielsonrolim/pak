@@ -11,7 +11,7 @@ end
 
 # ---- subcommands (only when fish expects a subcommand) ----
 complete -c pak -n '__fish_use_subcommand' -f -a 'upgrade up'           -d 'Upgrade system (paru -Syu and flatpak upgrade if available)'
-complete -c pak -n '__fish_use_subcommand' -f -a 'maintain cu full'     -d 'Full Cachy-Update maintenance run (cachy-update)'
+complete -c pak -n '__fish_use_subcommand' -f -a 'maintain cu full full-upgrade' -d 'Full Cachy-Update maintenance run (cachy-update)'
 complete -c pak -n '__fish_use_subcommand' -f -a 'check co'             -d 'List pending updates without applying them'
 complete -c pak -n '__fish_use_subcommand' -f -a 'update refresh'       -d 'Refresh package DB (paru -Sy)'
 complete -c pak -n '__fish_use_subcommand' -f -a 'search s'             -d 'Search packages (paru -Ss)'
@@ -45,12 +45,12 @@ complete -c pak -n '__fish_seen_subcommand_from files' \
 # `owns` takes a filesystem path — fall through to fish's default file completion.
 
 # `maintain` passes its args straight through to cachy-update / arch-update.
-complete -c pak -n '__fish_seen_subcommand_from maintain cu full' -f -l check    -d 'Check for available updates'
-complete -c pak -n '__fish_seen_subcommand_from maintain cu full' -f -l list     -d 'Display the list of pending updates'
-complete -c pak -n '__fish_seen_subcommand_from maintain cu full' -f -l devel    -d 'Include AUR development packages updates'
-complete -c pak -n '__fish_seen_subcommand_from maintain cu full' -f -l news     -d 'Display latest Arch news (optionally pass a count)'
-complete -c pak -n '__fish_seen_subcommand_from maintain cu full' -f -l services -d 'Check for services requiring a post upgrade restart'
-complete -c pak -n '__fish_seen_subcommand_from maintain cu full' -f -l debug    -d 'Display debug traces'
+complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -f -l check    -d 'Check for available updates'
+complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -f -l list     -d 'Display the list of pending updates'
+complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -f -l devel    -d 'Include AUR development packages updates'
+complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -f -l news     -d 'Display latest Arch news (optionally pass a count)'
+complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -f -l services -d 'Check for services requiring a post upgrade restart'
+complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -f -l debug    -d 'Display debug traces'
 
 # Subcommands that take no further arguments — block stray file completion.
 complete -c pak -n '__fish_seen_subcommand_from upgrade up check co update refresh aur aur-list clean autoremove orphans list explicit' -f

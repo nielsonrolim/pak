@@ -165,18 +165,18 @@ Finds unrequired dependencies via `pacman -Qdtq` and removes them with `paru -Rn
 
 Most subcommands have shorter aliases:
 
-| Subcommand   | Aliases              |
-| ------------ | -------------------- |
-| `upgrade`    | `up`                 |
-| `maintain`   | `cu`, `full`         |
-| `check`      | `co`                 |
-| `update`     | `refresh`            |
-| `search`     | `s`                  |
-| `install`    | `add`, `i`           |
-| `remove`     | `rm`, `uninstall`    |
-| `list`       | `explicit`           |
-| `aur`        | `aur-list`           |
-| `autoremove` | `orphans`            |
+| Subcommand   | Aliases                      |
+| ------------ | ---------------------------- |
+| `upgrade`    | `up`                         |
+| `maintain`   | `cu`, `full`, `full-upgrade` |
+| `check`      | `co`                         |
+| `update`     | `refresh`                    |
+| `search`     | `s`                          |
+| `install`    | `add`, `i`                   |
+| `remove`     | `rm`, `uninstall`            |
+| `list`       | `explicit`                   |
+| `aur`        | `aur-list`                   |
+| `autoremove` | `orphans`                    |
 
 ## License
 

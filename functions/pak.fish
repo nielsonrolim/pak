@@ -28,7 +28,7 @@ function pak --description "paru command wrapper"
                 flatpak upgrade
             end
 
-        case maintain cu full
+        case maintain cu full full-upgrade
             # Full CachyOS maintenance flow: repo + AUR updates plus news,
             # orphans, cache cleanup, pacnew handling, kernel/reboot &
             # service-restart checks. Any extra args are passed through
