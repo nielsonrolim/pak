@@ -15,6 +15,7 @@ pak owns <file>         # pacman -Qo <file>
 pak files <pkg>         # pacman -Ql <pkg>
 pak list                # explicitly installed packages (pacman -Qe)
 pak aur                 # AUR/foreign packages (pacman -Qm)
+pak aur-audit           # check installed AUR packages against the compromised list
 pak clean               # paru -Sc
 pak autoremove          # remove orphaned packages (pacman -Qdtq | paru -Rns)
 ```
@@ -147,6 +148,14 @@ pak aur
 
 Equivalent to `pacman -Qm` — handy for auditing what came from outside the official repos.
 
+### Audit installed AUR packages against the compromised list
+
+```fish
+pak aur-audit
+```
+
+Fetches the [Arch Linux AUR compromised-package list](https://md.archlinux.org/s/SxbqukK6IA) with `curl` and compares it against your installed AUR/foreign packages (`pacman -Qmq`). Prints a summary and, if any installed package appears on the list, a `WARNING:` block naming them; it exits non-zero in that case, so you can use it in scripts. Requires `curl` and network access — if `curl` is missing it prints how to install it.
+
 ### Clean the package cache
 
 ```fish
@@ -176,6 +185,7 @@ Most subcommands have shorter aliases:
 | `remove`     | `rm`, `uninstall`            |
 | `list`       | `explicit`                   |
 | `aur`        | `aur-list`                   |
+| `aur-audit`  | `aur-sec`, `aur-security`     |
 | `autoremove` | `orphans`                    |
 
 ## License

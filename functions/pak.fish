@@ -13,6 +13,7 @@ function pak --description "paru command wrapper"
         echo "  pak files <pkg>         # pacman -Ql <pkg>"
         echo "  pak list                # explicitly installed packages (pacman -Qe)"
         echo "  pak aur                 # AUR/foreign packages (pacman -Qm)"
+        echo "  pak aur-audit           # check installed AUR packages against the compromised list"
         echo "  pak clean               # paru -Sc"
         echo "  pak autoremove          # remove orphaned packages"
         return 1
@@ -102,6 +103,45 @@ function pak --description "paru command wrapper"
 
         case aur aur-list
             pacman -Qm
+
+        case aur-audit aur-sec aur-security
+            # Check installed AUR (foreign) packages against the published
+            # "Arch Linux AUR Compromised" list. Requires curl to fetch it.
+            if not command -q curl
+                echo "curl is required to fetch the compromised package list. Install it with:"
+                echo "  pak install curl"
+                return 1
+            end
+            set -l url "https://md.archlinux.org/s/SxbqukK6IA/download"
+            set -l compromised (curl -fsSL --max-time 20 $url 2>/dev/null | string match -rv '^```')
+            if test (count $compromised) -eq 0
+                echo "Could not fetch the compromised package list from:"
+                echo "  $url"
+                echo "Check your network connection and try again."
+                return 1
+            end
+            set -l installed (pacman -Qmq 2>/dev/null)
+            if test (count $installed) -eq 0
+                echo "No AUR (foreign) packages installed — nothing to check."
+                return 0
+            end
+            set -l hits
+            for pkg in $installed
+                if contains -- $pkg $compromised
+                    set -a hits $pkg
+                end
+            end
+            echo "Checked "(count $installed)" installed AUR package(s) against "(count $compromised)" known-compromised entries."
+            if test (count $hits) -eq 0
+                echo "No installed AUR packages are on the compromised list."
+            else
+                echo "WARNING: the following installed AUR packages are on the compromised list:"
+                for pkg in $hits
+                    echo "  $pkg"
+                end
+                echo "Review these packages and consider removing them with: pak remove <package>"
+                return 1
+            end
 
         case clean
             paru -Sc

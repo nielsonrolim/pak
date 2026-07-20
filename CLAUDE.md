@@ -29,3 +29,4 @@ When adding/renaming a subcommand or alias, update both. The completion guard's 
 - `paru` and `pacman` are on PATH (Arch / Arch-derived systems).
 - `pak upgrade` runs `paru -Syu` and then `flatpak upgrade` only if `command -q flatpak` succeeds — systems without flatpak fall through silently.
 - `pak autoremove` defines orphans as `pacman -Qdtq` (unrequired deps) and pipes them to `paru -Rns`.
+- `pak aur-audit` requires `command -q curl` and network access — it fetches the "Arch Linux AUR Compromised" list from the HedgeDoc `/download` endpoint (`https://md.archlinux.org/s/SxbqukK6IA/download`, raw markdown), strips the code-fence lines, and intersects it with `pacman -Qmq`. Exits non-zero if any installed AUR package matches.

@@ -22,6 +22,7 @@ complete -c pak -n '__fish_use_subcommand' -f -a 'owns'                 -d 'Find
 complete -c pak -n '__fish_use_subcommand' -f -a 'files'                -d 'List files in a package (pacman -Ql)'
 complete -c pak -n '__fish_use_subcommand' -f -a 'list explicit'        -d 'List explicitly installed packages (pacman -Qe)'
 complete -c pak -n '__fish_use_subcommand' -f -a 'aur aur-list'         -d 'List AUR/foreign packages (pacman -Qm)'
+complete -c pak -n '__fish_use_subcommand' -f -a 'aur-audit aur-sec aur-security' -d 'Check installed AUR packages against the compromised list'
 complete -c pak -n '__fish_use_subcommand' -f -a 'clean'                -d 'Clean cache (paru -Sc)'
 complete -c pak -n '__fish_use_subcommand' -f -a 'autoremove orphans'   -d 'Remove orphaned packages (pacman -Qdtq | paru -Rns)'
 
@@ -53,4 +54,4 @@ complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -
 complete -c pak -n '__fish_seen_subcommand_from maintain cu full full-upgrade' -f -l debug    -d 'Display debug traces'
 
 # Subcommands that take no further arguments — block stray file completion.
-complete -c pak -n '__fish_seen_subcommand_from upgrade up check co update refresh aur aur-list clean autoremove orphans list explicit' -f
+complete -c pak -n '__fish_seen_subcommand_from upgrade up check co update refresh aur aur-list aur-audit aur-sec aur-security clean autoremove orphans list explicit' -f
